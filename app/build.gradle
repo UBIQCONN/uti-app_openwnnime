@@ -1,0 +1,82 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'jp.co.omronsoft.openwnn'
+    compileSdk 29
+
+    defaultConfig {
+        applicationId "jp.co.omronsoft.openwnn"
+        minSdk 21
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                abiFilters "armeabi-v7a" , "arm64-v8a", "x86_64"
+            }
+        }
+        ndk {
+            abiFilters "armeabi-v7a" , "arm64-v8a", "x86_64"
+        }
+    }
+    signingConfigs {
+        sign_aosp {
+            keyAlias 'aosp'
+            keyPassword 'ubiqconn'
+            storeFile file('../signkey/aosp_platform.jks')
+            storePassword 'ubiqconn'
+        }
+        sign_ubiqconn {
+            keyAlias 'ubiqconn'
+            keyPassword 'ubiqconn'
+            storeFile file('../signkey/ubiqconn_platform.jks')
+            storePassword 'ubiqconn'
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.sign_aosp
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.sign_ubiqconn
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters "armeabi-v7a" , "arm64-v8a"
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+//    externalNativeBuild {
+//        cmake {
+//            path file('src/main/cpp/CMakeLists.txt')
+//            version '3.18.1'
+//        }
+//    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+dependencies {
+//    implementation 'androidx.appcompat:appcompat:1.6.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
