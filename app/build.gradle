@@ -31,6 +31,12 @@ android {
             storeFile file('../signkey/aosp_platform.jks')
             storePassword 'ubiqconn'
         }
+        sign_nxp_evk {
+            keyAlias 'nxp_evk'
+            keyPassword 'ubiqconn'
+            storeFile file('../signkey/nxp_evk.jks')
+            storePassword 'ubiqconn'
+        }
         sign_ubiqconn {
             keyAlias 'ubiqconn'
             keyPassword 'ubiqconn'
@@ -41,7 +47,7 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            signingConfig signingConfigs.sign_aosp
+            signingConfig signingConfigs.sign_nxp_evk
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
         }
