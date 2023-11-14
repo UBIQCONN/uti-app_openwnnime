@@ -23,6 +23,7 @@
             android:label="@string/preference_ime_setting_app">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <!-- Remove LAUNCHER -->
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
             </intent-filter>
         </activity>
