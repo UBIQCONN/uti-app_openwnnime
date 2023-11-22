@@ -12,7 +12,7 @@ def getVersionTag = { variant ->
         }
         def longTag = stdout.toString().trim()
 
-        return longTag.substring(longTag.indexOf('/') + 1, longTag.indexOf('-'))
+        return longTag.substring(longTag.indexOf('/') + 1)
     } catch (exception) {
         return "0.0.0";
     }
@@ -144,15 +144,46 @@ dependencies {
 
 // Define a custom task to copy the APK
 task copyApk(type: Copy) {
-    def apkDir = file("${project.buildDir}/outputs/apk/release")
-    from apkDir
-    include 'ime_japaneses-release-1.0.apk' // Replace with the actual APK filename if needed
-    into project.rootDir
+    // Iterate over application variants
+    android.applicationVariants.all { variant ->
+        // Get the output file for the variant
+        def outputFileName = variant.outputs.first().outputFileName
+
+        // Construct the source file path
+        def sourceFile = "${project.buildDir}/outputs/apk/${variant.name}/${outputFileName}"
+
+        // Set the destination directory
+        def destinationDirectory = "${project.rootDir}/"
+
+        //println "source file " + sourceFile
+        // Copy the APK file
+        from sourceFile
+        into destinationDirectory
+        rename { fileName ->
+            // Rename the file if needed
+            fileName
+        }
+
+        // Print a debug message
+        println "Copying $sourceFile to $destinationDirectory"
+    }
 }
 
 task delApk(type: Delete) {
-    def apkFile = file("${project.rootDir}/ime_japaneses-release-1.0.apk") // Replace with the actual APK filename if needed
-    delete apkFile
+    // Iterate over application variants
+    android.applicationVariants.all { variant ->
+        // Get the output file for the variant
+        def outputFileName = variant.outputs.first().outputFileName
+
+        // Construct the file path to be deleted
+        def filePathToDelete = "${project.rootDir}/${outputFileName}"
+
+        // Delete the APK file
+        delete filePathToDelete
+
+        // Print a debug message
+        println "Deleting $filePathToDelete"
+    }
 }
 // Make the copyApk task depend on the assembleRelease task
 tasks.getByName("assemble").dependsOn(copyApk)
