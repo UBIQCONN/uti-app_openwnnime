@@ -130,7 +130,7 @@ android {
                 output.versionCodeOverride = myVersionCode
             }
 
-            outputFileName = "${archivesBaseName}-${variant.name}-${defaultConfig.versionName}.apk"
+            outputFileName = "${archivesBaseName}-${variant.name}-${output.versionNameOverride}.apk"
         }
     }
 }
